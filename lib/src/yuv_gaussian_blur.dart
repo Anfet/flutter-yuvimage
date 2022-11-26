@@ -10,9 +10,11 @@ extension Yuv420ImageGaussianBlurExt on Yuv420Image {
 
   Yuv420Image blur(int radius) {
     final double sigma = max(radius / 2, 1);
+    final exponentDenominator = (2 * sigma * sigma);
+
     final int kernelWidth = ((2 * radius) + 1).toInt();
     final List<List<num>> kernel =
-        List.generate(kernelWidth, (index) => List.filled(kernelWidth, 0.0, growable: false), growable: false);
+    List.generate(kernelWidth, (index) => List.filled(kernelWidth, 0.0, growable: false), growable: false);
     num sum = 0.0;
 
     // Populate every position in the kernel with the respective Gaussian distribution value
@@ -21,8 +23,6 @@ extension Yuv420ImageGaussianBlurExt on Yuv420Image {
     for (int x = -radius; x < radius; x++) {
       for (int y = -radius; y < radius; y++) {
         int exponentNumerator = -(x * x + y * y);
-        num exponentDenominator = (2 * sigma * sigma);
-
         num eExpression = pow(e, exponentNumerator / exponentDenominator);
         num kernelValue = (eExpression / (2 * pi * sigma * sigma));
 
@@ -56,7 +56,7 @@ extension Yuv420ImageGaussianBlurExt on Yuv420Image {
           }
         }
 
-        setColor(x, y, YuvColor.rgb(r: r.toInt(), g: g.toInt(), b: b.toInt()));
+        setColor(x, y, YuvColor.rgb(r.toInt(), g.toInt(), b.toInt()));
       }
     }
 

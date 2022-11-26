@@ -71,36 +71,22 @@ class Yuv420Image {
   }
 
   YuvColor getColor(num x, num y) {
-    final int uvIndex = uvPixelStride * (x / 2).floor() + uvRowStride * (y / 2).floor();
+    final int uvIndex = uvPixelStride * (x ~/ 2) + uvRowStride * (y ~/ 2);
     final int index = (y * width + x).toInt();
 
     final yp = planes[0].bytes[index];
     final up = planes[1].bytes[uvIndex];
     final vp = planes[2].bytes[uvIndex];
-    return YuvColor.yuv(y: yp, u: up, v: vp);
+    return YuvColor.yuv(yp, up, vp);
   }
 
   void setColor(int x, int y, YuvColor color) {
-    final int uvIndex = uvPixelStride * (x / 2).floor() + uvRowStride * (y / 2).floor();
+    final int uvIndex = uvPixelStride * (x ~/ 2) + uvRowStride * (y ~/ 2);
     final int index = y * width.toInt() + x;
 
     planes[0].bytes[index] = color.y;
     planes[1].bytes[uvIndex] = color.u;
     planes[2].bytes[uvIndex] = color.v;
-  }
-
-  Yuv420Image crop(Rect rect) {
-    num width = rect.right - rect.left;
-    num height = rect.bottom - rect.top;
-    final cropped = Yuv420Image.createEmpty(width: width, height: height);
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        YuvColor color = getColor(x + rect.left, y + rect.top);
-        cropped.setColor(x, y, color);
-      }
-    }
-
-    return cropped;
   }
 
   Uint8List getBytes() {
