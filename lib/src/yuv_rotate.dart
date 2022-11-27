@@ -1,7 +1,7 @@
 import 'yuv_image.dart';
 
-extension Yuv420ImageRotateExt on Yuv420Image {
-  Yuv420Image copyRotateOrthogonal(num degrees) {
+extension YuvImageRotateExt on YuvImage {
+  YuvImage copyRotateOrthogonal(num degrees) {
     if (degrees < 0) {
       degrees = 360 - degrees.abs();
     }
@@ -17,7 +17,7 @@ extension Yuv420ImageRotateExt on Yuv420Image {
     final iangle = nangle ~/ 90.0;
     switch (iangle) {
       case 1: // 90 deg.
-        final dst = Yuv420Image.createEmpty(width: height, height: width);
+        final dst = create(height, width);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
             dst.setColor(x, y, getColor(y, hm1 - x));
@@ -25,7 +25,7 @@ extension Yuv420ImageRotateExt on Yuv420Image {
         }
         return dst;
       case 2: // 180 deg.
-        final dst = Yuv420Image.createEmpty(width: width, height: height);
+        final dst = create(width, height);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
             dst.setColor(x, y, getColor(wm1 - x, hm1 - y));
@@ -33,7 +33,7 @@ extension Yuv420ImageRotateExt on Yuv420Image {
         }
         return dst;
       case 3: // 270 deg.
-        final dst = Yuv420Image.createEmpty(width: height, height: width);
+        final dst = create(height, width);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
             dst.setColor(x, y, getColor(wm1 - y, x));
@@ -41,7 +41,7 @@ extension Yuv420ImageRotateExt on Yuv420Image {
         }
         return dst;
       default: // 0 deg.
-        return Yuv420Image.from(this);
+        return copy(this);
     }
   }
 }

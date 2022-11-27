@@ -1,20 +1,24 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
-import 'yuv_color.dart';
 import 'yuv_image.dart';
 
-extension Yuv420CropperExt on Yuv420Image {
-  Yuv420Image crop(Rect rect) {
-    num width = rect.right - rect.left;
-    num height = rect.bottom - rect.top;
-    final cropped = Yuv420Image.createEmpty(width: width, height: height);
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        YuvColor color = getColor(x + rect.left, y + rect.top);
-        cropped.setColor(x, y, color);
-      }
+extension YuvImageCropperExt on YuvImage {
+  ///crop part of image to another, if rect is null, entire image is copied
+  YuvImage crop([Rect? rect]) {
+    final source = this;
+    final left = (rect?.left ?? 0).toInt();
+    final top = (rect?.top ?? 0).toInt();
+    final width = ((rect?.right ?? this.width) - left).toInt();
+    final height = ((rect?.bottom ?? this.height) - top).toInt();
+    final target = source.create(width, height);
+    for (int y = 0; y < target.height; y++) {
+      List<Uint8List> bytes = source.copyRowBytes(y + top, left, target.width);
+      target.putRowBytes(y, 0, bytes);
     }
 
-    return cropped;
+    return target;
   }
+
+  YuvImage copy() => crop();
 }

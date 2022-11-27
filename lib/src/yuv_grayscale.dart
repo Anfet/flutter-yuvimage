@@ -1,9 +1,9 @@
 import 'yuv_image.dart';
 
-extension Yuv420GrayscaleExt on Yuv420Image {
-  Yuv420Image copyGrayscale() => Yuv420Image.from(this).grayscale();
+extension YuvGrayscaleExt on YuvImage {
+  YuvImage copyGrayscale() => copy(this).grayscale();
 
-  Yuv420Image grayscale() {
+  YuvImage grayscale() {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         setColor(x, y, getColor(x, y).gray);

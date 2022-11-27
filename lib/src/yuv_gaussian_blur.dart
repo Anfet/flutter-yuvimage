@@ -5,16 +5,16 @@ import 'yuv_image.dart';
 
 /// many thanks to Aryaman Sharda for his outstanding blog on gaussian blur
 /// https://aryamansharda.medium.com/image-filters-gaussian-blur-eb36db6781b1
-extension Yuv420ImageGaussianBlurExt on Yuv420Image {
-  Yuv420Image copyBlur(int radius) => Yuv420Image.from(this).blur(radius);
+extension YuvImageGaussianBlurExt on YuvImage {
+  YuvImage copyBlur(int radius) => copy(this).blur(radius);
 
-  Yuv420Image blur(int radius) {
+  YuvImage blur(int radius) {
     final double sigma = max(radius / 2, 1);
     final exponentDenominator = (2 * sigma * sigma);
 
     final int kernelWidth = ((2 * radius) + 1).toInt();
     final List<List<num>> kernel =
-    List.generate(kernelWidth, (index) => List.filled(kernelWidth, 0.0, growable: false), growable: false);
+        List.generate(kernelWidth, (index) => List.filled(kernelWidth, 0.0, growable: false), growable: false);
     num sum = 0.0;
 
     // Populate every position in the kernel with the respective Gaussian distribution value

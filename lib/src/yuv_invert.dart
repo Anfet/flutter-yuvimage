@@ -1,9 +1,9 @@
 import 'yuv_image.dart';
 
-extension Yuv420InvertExt on Yuv420Image {
-  Yuv420Image copyInvert() => Yuv420Image.from(this).invert();
+extension Yuv420InvertExt on YuvImage {
+  YuvImage copyInvert() => copy(this).invert();
 
-  Yuv420Image invert() {
+  YuvImage invert() {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         setColor(x, y, getColor(x, y).negative);
