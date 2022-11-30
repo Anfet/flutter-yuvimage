@@ -1,39 +1,65 @@
 <!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
+YuvImage
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Small dart only library for manipulating yuv images. Usually coming from CameraImage. Supports i420 for android and nv21 for ios
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Allows you to receive a CameraImage, convert it to YuvImage and do some manipulation, like, crop, rotate, get, set colors and feed it forward.
+Since it's pure dart, code is slow for streaming.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+const _shift = (0xFF << 24);
+
+extension Yuv420ImageExt on YuvImage {
+  imglib.Image toBitmap() {
+    var img = imglib.Image(width.toInt(), height.toInt());
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        var color = getColor(x, y);
+        final int index = y * width.toInt() + x;
+        img.data[index] = _shift | (color.b << 16) | (color.g << 8) | color.r;
+      }
+    }
+
+    return img;
+  }
+
+  InputImage toInputImage(int sensorOrientation) {
+    final bytes = getBytes();
+    final InputImageRotation imageRotation = InputImageRotationValue.fromRawValue(sensorOrientation)!;
+    final inputImageData = InputImageData(
+      size: size,
+      imageRotation: imageRotation,
+      inputImageFormat: InputImageFormat.yuv420,
+      planeData: planes
+          .map(
+            (yuvPlane) => InputImagePlaneMetadata(
+              bytesPerRow: yuvPlane.rowStride,
+              height: yuvPlane.height,
+              width: yuvPlane.width,
+            ),
+          )
+          .toList(growable: false),
+    );
+
+    final inputImage = InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+    return inputImage;
+  }
+}
+
+extension Camera2YuvImageExt on CameraImage {
+  YuvImage toYuvImage() {
+    final image = YuvParser.fromRaw(
+      width,
+      height,
+      planes.map((data) => YuvPlaneParserData(data.bytesPerRow, data.bytesPerPixel, data.bytes)).toList(),
+    );
+    return image;
+  }
+}
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
