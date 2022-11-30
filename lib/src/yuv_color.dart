@@ -11,10 +11,10 @@ class YuvColor {
 
   int get luminance => y;
 
-  YuvColor get negative => YuvColor.rgb(255 - r, 255 - r, 255 - b);
+  YuvColor get negative => YuvColor.rgb(255 - r, 255 - g, 255 - b);
 
   YuvColor get bw {
-    var rgb = luminance > 0x7F ? 0xff : 0x00;
+    var rgb = y > 0x7F ? 0xff : 0x00;
     return YuvColor.rgb(rgb, rgb, rgb);
   }
 
