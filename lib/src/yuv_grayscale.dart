@@ -1,3 +1,5 @@
+import 'package:yuvimage/src/yuv_color.dart';
+
 import 'yuv_image.dart';
 
 extension YuvGrayscaleExt on YuvImage {
@@ -6,7 +8,7 @@ extension YuvGrayscaleExt on YuvImage {
   YuvImage grayscale() {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        setColor(x, y, getColor(x, y).gray);
+        setYuvColor(x, y, getYuvColor(x, y).gray);
       }
     }
     return this;
@@ -16,7 +18,7 @@ extension YuvGrayscaleExt on YuvImage {
     var lumi = 0;
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        lumi += getColor(x, y).luminance;
+        lumi += getYuvColor(x, y).luminance;
       }
     }
 

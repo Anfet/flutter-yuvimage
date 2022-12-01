@@ -42,21 +42,21 @@ extension YuvImageGaussianBlurExt on YuvImage {
 
     for (int x = radius; x < width - radius; x++) {
       for (int y = radius; y < height - radius; y++) {
-        num r = 0;
-        num g = 0;
-        num b = 0;
+        num yp = 0;
+        num up = 0;
+        num vp = 0;
 
         for (int kx = -radius; kx < radius; kx++) {
           for (int ky = -radius; ky < radius; ky++) {
             num kernelValue = kernel[kx + radius][ky + radius];
-            final nearColor = getColor(x - kx, y - ky);
-            r += nearColor.r * kernelValue;
-            g += nearColor.g * kernelValue;
-            b += nearColor.b * kernelValue;
+            final nearColor = getYuvColor(x - kx, y - ky);
+            yp += nearColor.yr * kernelValue;
+            up += nearColor.ug * kernelValue;
+            vp += nearColor.vb * kernelValue;
           }
         }
 
-        setColor(x, y, YuvColor.rgb(r.toInt(), g.toInt(), b.toInt()));
+        setYuvColor(x, y, YuvColor.yuvToInt(yp.toInt(), up.toInt(), vp.toInt()));
       }
     }
 

@@ -61,6 +61,29 @@ class Yuv420Image extends YuvImage {
   }
 
   @override
+  int getYuvColor(int x, int y) {
+    final yindex = (y * planes[0].rowStride) + (x * planes[0].pixelStride);
+    final uvIndex = ((y ~/ 2) * planes[1].rowStride) + ((x ~/ 2) * planes[1].pixelStride);
+
+    final yp = planes[0].bytes[yindex];
+    final up = planes[1].bytes[uvIndex];
+    final vp = planes[2].bytes[uvIndex];
+
+    return YuvColor.yuvToInt(yp, up, vp);
+  }
+
+  @override
+  void setYuvColor(int x, int y, int color) {
+    final yindex = (y * planes[0].rowStride) + (x * planes[0].pixelStride);
+    final uvIndex = ((y ~/ 2) * planes[1].rowStride) + ((x ~/ 2) * planes[1].pixelStride);
+
+    var yp =
+    planes[0].bytes[yindex] = color.yr;
+    planes[1].bytes[uvIndex] = color.ug;
+    planes[2].bytes[uvIndex] = color.vb;
+  }
+
+  @override
   YuvImage copy(YuvImage other) {
     if (other.rawFormat == rawFormat) {
       return Yuv420Image._(width, height, List.of(planes.map((plane) => plane.copy())));
@@ -84,4 +107,6 @@ class Yuv420Image extends YuvImage {
     planes[1].pasteBytes(row ~/ 2, start ~/ 2, bytes[1]);
     planes[2].pasteBytes(row ~/ 2, start ~/ 2, bytes[2]);
   }
+
+
 }

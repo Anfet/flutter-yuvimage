@@ -82,4 +82,27 @@ class YuvNV21Image extends YuvImage {
     planes[0].pasteBytes(row, start, bytes[0]);
     planes[1].pasteBytes(row ~/ 2, start ~/ 2, bytes[1]);
   }
+
+  @override
+  int getYuvColor(int x, int y) {
+    final int index = y * planes[0].rowStride + x;
+    final int vIndex = (planes[1].rowStride * (y ~/ 2)) + (x ~/ 2) * planes[1].pixelStride;
+    final int uIndex = (planes[1].rowStride * (y ~/ 2)) + (x ~/ 2) * planes[1].pixelStride + 1;
+
+    final yp = planes[0].bytes[index];
+    final up = planes[1].bytes[uIndex];
+    final vp = planes[1].bytes[vIndex];
+    return YuvColor.yuvToInt(yp, up, vp);
+  }
+
+  @override
+  void setYuvColor(int x, int y, int color) {
+    final int index = y * planes[0].rowStride + x;
+    final int vIndex = (planes[1].rowStride * (y ~/ 2)) + (x ~/ 2) * planes[1].pixelStride;
+    final int uIndex = (planes[1].rowStride * (y ~/ 2)) + (x ~/ 2) * planes[1].pixelStride + 1;
+
+    planes[0].bytes[index] = color.yr;
+    planes[1].bytes[uIndex] = color.ug;
+    planes[1].bytes[vIndex] = color.vb;
+  }
 }
