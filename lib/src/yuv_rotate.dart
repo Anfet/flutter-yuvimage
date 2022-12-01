@@ -20,7 +20,7 @@ extension YuvImageRotateExt on YuvImage {
         final dst = create(height, width);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
-            dst.setColor(x, y, getColor(y, hm1 - x));
+            dst.setYuvColor(x, y, getYuvColor(y, hm1 - x));
           }
         }
         return dst;
@@ -28,7 +28,7 @@ extension YuvImageRotateExt on YuvImage {
         final dst = create(width, height);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
-            dst.setColor(x, y, getColor(wm1 - x, hm1 - y));
+            dst.setYuvColor(x, y, getYuvColor(wm1 - x, hm1 - y));
           }
         }
         return dst;
@@ -36,7 +36,7 @@ extension YuvImageRotateExt on YuvImage {
         final dst = create(height, width);
         for (var y = 0; y < dst.height; ++y) {
           for (var x = 0; x < dst.width; ++x) {
-            dst.setColor(x, y, getColor(wm1 - y, x));
+            dst.setYuvColor(x, y, getYuvColor(wm1 - y, x));
           }
         }
         return dst;

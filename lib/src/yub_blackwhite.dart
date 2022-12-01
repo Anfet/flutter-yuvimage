@@ -1,3 +1,4 @@
+import 'yuv_color.dart';
 import 'yuv_image.dart';
 
 extension YuvBlackWhiteExt on YuvImage {
@@ -6,7 +7,7 @@ extension YuvBlackWhiteExt on YuvImage {
   YuvImage toBlackAndWhite() {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        setColor(x, y, getColor(x, y).bw);
+        setYuvColor(x, y, getYuvColor(x, y).blackwhite);
       }
     }
     return this;

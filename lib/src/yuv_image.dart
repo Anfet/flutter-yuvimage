@@ -20,7 +20,11 @@ abstract class YuvImage {
 
   void setColor(int x, int y, YuvColor color);
 
+  void setYuvColor(int x, int y, int color);
+
   YuvColor getColor(int x, int y);
+
+  int getYuvColor(int x, int y);
 
   Uint8List getBytes() {
     final WriteBuffer allBytes = WriteBuffer();
